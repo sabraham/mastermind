@@ -1,0 +1,44 @@
+from itertools import permutations
+
+pegs = [0, 3, 2, 0]
+nails = [1, 0, -1, -1]
+poss = {(5, 5, 3, 0): {0:1, 1:0, 2:0, 3:1, 4:0, 5:2}
+
+for poss_ans, poss_colors in poss.items():
+    nails_perm = permutations(nails)
+    valid_perm = False
+    for perm in nails_perm:
+        black_pegs = [i for i, x in enumerate(perm) if x == 1]
+        white_pegs = [i for i, x in enumerate(perm) if x == 0]
+        no_pegs = [i for i, x in enumerate(perm) if x == -1]
+        poss_perm = True
+        for b in black_pegs:
+            if poss_ans[b] != pegs[b]:
+                poss_perm = False
+                break
+        if not poss_perm: continue
+        # 2 problems with white pegs
+        # 1: this color not in this position
+        for w in white_pegs:
+            if poss_ans[w] == pegs[w]:
+                poss_perm = False
+                break
+        if not poss_perm: continue
+        # 2: elsewhere
+        perm_colors = {x:0 for x in xrange(6)}
+        for w in white_pegs:
+            perm_colors[pegs[w]] += 1
+        for color, num in perm_colors.items():
+            if poss_colors[color] < num: poss_perm = False
+        if not poss_perm: continue
+        #nothing pegs
+        for n in no_pegs:
+            if pegs[n] in poss_ans:
+                poss_perm = False
+                break
+        if not poss_perm: continue
+        #SURVIVED!!
+        valid_perm = True
+        break
+    if not valid_perm: del poss[poss_ans]
+    #

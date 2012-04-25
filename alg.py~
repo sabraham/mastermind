@@ -1,0 +1,8 @@
+import sys
+
+# colors = BWRYGB
+# number = 012345
+
+while True:
+    sys.stdout.write("Input: ")
+        sys.stdin.readline()
